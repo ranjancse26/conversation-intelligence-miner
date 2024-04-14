@@ -12,7 +12,7 @@ The CloudFlare-Based Conversational Intelligence Miner. Demo - https://aged-pine
 
 # Getting Started
 Please read this blog post before you dive into the internals - 
-[DEV Post](https://dev.to/ranjancse/conversation-intelligence-miner-15bl-temp-slug-8794048)
+[DEV Post](https://dev.to/ranjancse/conversation-intelligence-miner-2618)
 
 - [Login to Cloudflare](https://dash.cloudflare.com/)
 - [Create a new token](https://dash.cloudflare.com/profile/api-tokens)
