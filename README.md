@@ -32,9 +32,9 @@ Please read this blog post before you dive into the internals -
 CLOUDFLARE_ACCOUNT_ID = ""
 CLOUDFLARE_ACCOUNT_API_KEY = ""
 ```
-- Run the product on DEV - npx wrangler dev
-- Deploy the product on Cloudflare - npx wrangler deploy
-- Note - If you wish to create a new Worker AI Project, Please use the command - npm create cloudflare@2 and following the step by step process.
+- Run the product on DEV - **npx wrangler dev**
+- Deploy the product on Cloudflare - **npx wrangler deploy**
+- Note - If you wish to create a new Worker AI Project, Please use the command - **npm create cloudflare@2** and following the step by step process.
 
 
 
