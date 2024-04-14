@@ -13,133 +13,127 @@ import getSentiments from './sentimentanalysis';
 
 async function handleSession(websocket) {
 	websocket.accept();
+	let trimmedContent = '';
+	let summary = '';
 	websocket.addEventListener('message', async ({ data }) => {
-		var jsonData = JSON.parse(data);
-		if(jsonData.command === "GETBANNER"){
-			// Handle Banner Image		
-			console.log(data);
-			const trimmedContent = jsonData.content.substring(0, maxToken);
-			const summary = await getSummary(trimmedContent, apiKey, accountId);
-			const llmResponse = await getBannerImage(summary, apiKey, accountId);
-			const dataArray = Array.from(llmResponse);
-			const finalResponse = {
-				'type': 'BANNER',
-				'content': dataArray,
-				'summary': summary
-			}
-			websocket.send(JSON.stringify(finalResponse));
-		}		
-		else if(jsonData.command === "GETTRANSLATEDCONTENT"){
-			// Handle Transcript Language Translation		
-			console.log(data);
-			const source = jsonData.source;
-			const target = jsonData.target;
-			const trimmedContent = jsonData.content.substring(0, maxToken);
-			const llmResponse = await getTranslatedContent(trimmedContent, source, target, apiKey, accountId);
-			const finalResponse = {
-				'type': 'TRANSLATEDCONTENT',
-				'content': llmResponse
-			}
-			websocket.send(JSON.stringify(finalResponse));
-		}
-		else if(jsonData.command === "GETSENTIMENTS"){
-			// Handle Transcript Sentiments		
-			console.log(data);
-			const trimmedContent = jsonData.content.substring(0, maxToken);
-			const llmResponse = await getSentiments(trimmedContent, apiKey, accountId);
-			const finalResponse = {
-				'type': 'SENTIMENTS',
-				'content': llmResponse
-			}
-			websocket.send(JSON.stringify(finalResponse));
-		}
-		else if(jsonData.command === "GETASPECTS"){
-			// Handle Transcript Aspects		
-			console.log(data);
-			const trimmedContent = jsonData.content.substring(0, maxToken);
-			const summary = await getSummary(trimmedContent, apiKey, accountId);
-			const llmResponse = await getAspects(summary, apiKey, accountId);
-			const finalResponse = {
-				'type': 'ASPECTS',
-				'content': llmResponse
-			}
-			websocket.send(JSON.stringify(finalResponse));
-		}
-		else if(jsonData.command === "GETTRENDS"){
-			// Handle Transcript Trends		
-			console.log(data);
-			const trimmedContent = jsonData.content.substring(0, maxToken);
-			const llmResponse = await getTrends(trimmedContent, apiKey, accountId);
-			const finalResponse = {
-				'type': 'TRENDS',
-				'content': llmResponse
-			}
-			websocket.send(JSON.stringify(finalResponse));
-		}
-		else if(jsonData.command === "GETRECOMMENDATIONS"){
-			// Handle Transcript Recommendations		
-			console.log(data);
-			const trimmedContent = jsonData.content.substring(0, maxToken);
-			const llmResponse = await getRecommendations(trimmedContent, apiKey, accountId);
-			const finalResponse = {
-				'type': 'RECOMMENDATIONS',
-				'content': llmResponse
-			}
-			websocket.send(JSON.stringify(finalResponse));
-		}
-		else if(jsonData.command === "GETACTIONITEMS"){
-			// Handle Transcript Action Items			
-			console.log(data);
-			const trimmedContent = jsonData.content.substring(0, maxToken);
-			const llmResponse = await getActionItems(trimmedContent, apiKey, accountId);
-			const finalResponse = {
-				'type': 'ACTIONITEMS',
-				'content': llmResponse
-			}
-			websocket.send(JSON.stringify(finalResponse));
-		}
-		else if(jsonData.command === "GETTOPICS"){
-			// Handle Transcript Topics			
-			console.log(data);
-			const trimmedContent = jsonData.content.substring(0, maxToken);
-			const llmResponse = await getTopics(trimmedContent, apiKey, accountId);
-			const finalResponse = {
-				'type': 'TOPICS',
-				'content': llmResponse
-			}
-			websocket.send(JSON.stringify(finalResponse));
-		}
-		else if(jsonData.command === "GETKEYWORDS"){
-			// Handle Transcript Keywords			
-			console.log(data);
-			const trimmedContent = jsonData.content.substring(0, maxToken);
-			const llmResponse = await getKeywords(trimmedContent, apiKey, accountId);
-			const finalResponse = {
-				'type': 'KEYWORDS',
-				'content': llmResponse
-			}
-			websocket.send(JSON.stringify(finalResponse));
-		}
-		else if(jsonData.command === "GETSUMMARY"){
-			// Handle Transcript Summary			
-			console.log(data);
-			const trimmedContent = jsonData.content.substring(0, maxToken);
-			const llmResponse = await getSummary(trimmedContent, apiKey, accountId);
-			const finalResponse = {
-				'type': 'SUMMARY',
-				'content': llmResponse
-			}
-			websocket.send(JSON.stringify(finalResponse));
-		}else if(jsonData.command === "GETTRANSCRIPT"){
-			// Handle Fetching Transcript
-			console.log(data);
-			const transcript = await getTranscript(data);
-			const finalResponse = {
-				'type': 'TRANSCRIPT',
-				'content': transcript
-			}
-			websocket.send(JSON.stringify(finalResponse));
-		}		
+		const jsonData = JSON.parse(data);		
+		switch(jsonData.command){
+			case "GETBANNER":	
+				console.log(data);
+				trimmedContent = jsonData.content.substring(0, maxToken);
+				summary = await getSummary(trimmedContent, apiKey, accountId);
+				const llmBannerResponse = await getBannerImage(summary, apiKey, accountId);
+				const dataArray = Array.from(llmBannerResponse);
+				const finalBannerResponse = {
+					'type': 'BANNER',
+					'content': dataArray,
+					'summary': summary
+				}
+				websocket.send(JSON.stringify(finalBannerResponse));
+				break;
+			case "GETTRANSLATEDCONTENT":	
+				console.log(data);
+				const source = jsonData.source;
+				const target = jsonData.target;
+				trimmedContent = jsonData.content.substring(0, maxToken);
+				const llmTranslationResponse = await getTranslatedContent(trimmedContent, source, target, apiKey, accountId);
+				const finalTranslationResponse = {
+					'type': 'TRANSLATEDCONTENT',
+					'content': llmTranslationResponse
+				}
+				websocket.send(JSON.stringify(finalTranslationResponse));
+				break;
+			case "GETSENTIMENTS":	
+				console.log(data);
+				trimmedContent = jsonData.content.substring(0, maxToken);
+				const llmSentimentResponse = await getSentiments(trimmedContent, apiKey, accountId);
+				const finalSentimentResponse = {
+					'type': 'SENTIMENTS',
+					'content': llmSentimentResponse
+				}
+				websocket.send(JSON.stringify(finalSentimentResponse));
+				break;
+			case "GETASPECTS":	
+				console.log(data);
+				trimmedContent = jsonData.content.substring(0, maxToken);
+				summary = await getSummary(trimmedContent, apiKey, accountId);
+				const llmAspectResponse = await getAspects(summary, apiKey, accountId);
+				const finalAspectResponse = {
+					'type': 'ASPECTS',
+					'content': llmAspectResponse
+				}
+				websocket.send(JSON.stringify(finalAspectResponse));
+				break;
+			case "GETTRENDS":
+				console.log(data);
+				trimmedContent = jsonData.content.substring(0, maxToken);
+				const llmTrendResponse = await getTrends(trimmedContent, apiKey, accountId);
+				const finalTrendResponse = {
+					'type': 'TRENDS',
+					'content': llmTrendResponse
+				}
+				websocket.send(JSON.stringify(finalTrendResponse));
+				break;
+			case "GETRECOMMENDATIONS":
+				console.log(data);
+				trimmedContent = jsonData.content.substring(0, maxToken);
+				const llmRecommendationResponse = await getRecommendations(trimmedContent, apiKey, accountId);
+				const finalRecommendationResponse = {
+					'type': 'RECOMMENDATIONS',
+					'content': llmRecommendationResponse
+				}
+				websocket.send(JSON.stringify(finalRecommendationResponse));
+				break;
+			case "GETACTIONITEMS":
+				console.log(data);
+				trimmedContent = jsonData.content.substring(0, maxToken);
+				const llmActionItemResponse = await getActionItems(trimmedContent, apiKey, accountId);
+				const finalActionItemResponse = {
+					'type': 'ACTIONITEMS',
+					'content': llmActionItemResponse
+				}
+				websocket.send(JSON.stringify(finalActionItemResponse));
+				break;
+			case "GETTOPICS":
+				console.log(data);
+				trimmedContent = jsonData.content.substring(0, maxToken);
+				const llmTopicResponse = await getTopics(trimmedContent, apiKey, accountId);
+				const finalTopicResponse = {
+					'type': 'TOPICS',
+					'content': llmTopicResponse
+				}
+				websocket.send(JSON.stringify(finalTopicResponse));
+				break;
+			case "GETKEYWORDS":
+				console.log(data);
+				trimmedContent = jsonData.content.substring(0, maxToken);
+				const llmKeywordResponse = await getKeywords(trimmedContent, apiKey, accountId);
+				const finalKeywordResponse = {
+					'type': 'KEYWORDS',
+					'content': llmKeywordResponse
+				}
+				websocket.send(JSON.stringify(finalKeywordResponse));
+				break;
+			case "GETSUMMARY":
+				console.log(data);
+				trimmedContent = jsonData.content.substring(0, maxToken);
+				const llmSummaryResponse = await getSummary(trimmedContent, apiKey, accountId);
+				const finalSummaryResponse = {
+					'type': 'SUMMARY',
+					'content': llmSummaryResponse
+				}
+				websocket.send(JSON.stringify(finalSummaryResponse));
+				break;
+			case "GETTRANSCRIPT":
+				console.log(data);
+				const transcript = await getTranscript(data);
+				const finalTranscriptResponse = {
+					'type': 'TRANSCRIPT',
+					'content': transcript
+				}
+				websocket.send(JSON.stringify(finalTranscriptResponse));
+				break;
+		}	
 	});
 
 	websocket.addEventListener('close', async evt => {
